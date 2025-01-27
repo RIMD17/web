@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,user-scalable=no,
+    initial-scale=1.0,maximum-scale=1.0,minimun-scale=1.0">
+    <title>Calculadora de Estimación Puntual </title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="icon" href="logo.JPG">
+</head>
+<body>
+    <header>
+        <nav>
+         <div class="container">
+             <a href="index 2.html">Inicio</a>
+            
+        </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1 class="text-center">Calculadora de Estimación Puntual e Estimación por Intervalos</h1>
+        <div class="row">
+            <div class="left-column">
+                <aside>
+                    <h3>¿Qué es la estimación puntual?</h3>
+                    <p>La estimación puntual es un valor único que se utiliza para estimar un parámetro poblacional. Por ejemplo, la media de una muestra se utiliza como estimación puntual de la media poblacional.</p>
+                </aside>
+                <aside>
+                    <h3>¿Qué es el intervalo de confianza?</h3>
+                    <p>Un intervalo de confianza es un rango de valores que se utiliza para estimar un parámetro poblacional. Este intervalo se calcula a partir de la muestra y proporciona un nivel de confianza sobre la estimación.</p>
+                </aside>
+            </div>
+            <div class="right-column">
+                <div class="form-group">
+                    <label for="data">Introduce tus datos (separados por comas):</label>
+                    <input type="text" class="form-control" id="data" placeholder="Ej: 10, 12, 14, 16, 18">
+                </div>
+                
+                <div class="form-group">
+                    <label for="confidence">Nivel de confianza (%):</label>
+                    <input type="number" class="form-control" id="confidence" value="95" min="0" max="100">
+                </div>
+                
+                <button class="btn btn-primary btn-block" onclick="calculate()">Calcular</button>
+
+                <h2>Resultados:</h2>
+                <p id="mean" class="result"></p>
+                <p id="confidenceInterval" class="result"></p>
+
+                <div class="example">
+                    <h3>Ejemplo:</h3>
+                    <p>Supongamos que tienes los siguientes datos: <strong>10, 12, 14, 16, 18</strong>.</p>
+                    <p>Si eliges un nivel de confianza del <strong>95%</strong>, el programa calculará:</p>
+                    <ul>
+                        <li>La media de los datos.</li>
+                        <li>La desviación estándar.</li>
+                        <li>El intervalo de confianza para la media.</li>
+                    </ul>
+                    <p>Por ejemplo, para estos datos, la media es <strong>14</strong> y el intervalo de confianza podría ser <strong>[12.5, 15.5]</strong> (esto es solo un ejemplo, los resultados reales se calcularán al presionar el botón).</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Autores:<br> Romulo Medina y Mike Kim.Todos los Derechos Reservados</p>
+        <section class="redes-sociales">
+            <div class="contenedor">
+                <a class="twitter" href="#"><i class="fa fa-instagram"></i></a>
+                <a class="facebook" href="#"><i class="fa fa-facebook"></i></a>
+                <a class="twitter" href="#"><i class="fa fa-twitter"></i></a>
+                <a class="youtube" href="https://youtube.com/@romulomedina3837?si=N7uPj3ELBZ5VHlyM"><i class="fa fa-youtube-play"></i></a>
+            </div>
+        </section>
+       
+    </footer>
+
+    <script>
+        function calculate() {
+            const dataInput = document.getElementById('data').value;
+            const confidenceLevel = parseFloat(document.getElementById('confidence').value);
+            const data = dataInput.split(',').map(Number).filter(n => !isNaN(n));
+
+            if (data.length === 0) {
+                alert("Por favor, introduce datos válidos.");
+                return;
+            }
+
+            const mean = data.reduce((a, b) => a + b, 0) / data.length;
+            const stdDev = Math.sqrt(data.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / data.length);
+            const z = confidenceLevel === 95 ? 1.96 : (confidenceLevel === 99 ? 2.576 : 1.645); // Valores z para diferentes niveles de confianza
+            const marginOfError = z * (stdDev / Math.sqrt(data.length));
+            const lowerBound = mean - marginOfError;
+            const upperBound = mean + marginOfError;
+
+            document.getElementById('mean').innerText = `Media (Estimación Puntual): ${mean.toFixed(2)}`;
+            document.getElementById('confidenceInterval').innerText = `Intervalo de Confianza (${confidenceLevel}%): [${lowerBound.toFixed(2)}, ${upperBound.toFixed(2)}]`;
+        }
+    </script>
+</body>
+</html>
